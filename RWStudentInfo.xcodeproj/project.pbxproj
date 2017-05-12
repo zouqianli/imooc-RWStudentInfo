@@ -13,6 +13,9 @@
 		997AD0A91EC6318200C2C215 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 997AD0A71EC6318200C2C215 /* Main.storyboard */; };
 		997AD0AB1EC6318200C2C215 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 997AD0AA1EC6318200C2C215 /* Assets.xcassets */; };
 		997AD0AE1EC6318200C2C215 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 997AD0AC1EC6318200C2C215 /* LaunchScreen.storyboard */; };
+		997AD0B71EC632FA00C2C215 /* Student.m in Sources */ = {isa = PBXBuildFile; fileRef = 997AD0B61EC632FA00C2C215 /* Student.m */; };
+		997AD0BA1EC6342800C2C215 /* StudentManage.m in Sources */ = {isa = PBXBuildFile; fileRef = 997AD0B91EC6342800C2C215 /* StudentManage.m */; };
+		997AD0BD1EC63CA800C2C215 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 997AD0BC1EC63CA800C2C215 /* libsqlite3.0.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,11 @@
 		997AD0AA1EC6318200C2C215 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		997AD0AD1EC6318200C2C215 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		997AD0AF1EC6318200C2C215 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		997AD0B51EC632FA00C2C215 /* Student.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Student.h; sourceTree = "<group>"; };
+		997AD0B61EC632FA00C2C215 /* Student.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Student.m; sourceTree = "<group>"; };
+		997AD0B81EC6342800C2C215 /* StudentManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudentManage.h; sourceTree = "<group>"; };
+		997AD0B91EC6342800C2C215 /* StudentManage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudentManage.m; sourceTree = "<group>"; };
+		997AD0BC1EC63CA800C2C215 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				997AD0BD1EC63CA800C2C215 /* libsqlite3.0.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +53,7 @@
 			children = (
 				997AD09D1EC6318200C2C215 /* RWStudentInfo */,
 				997AD09C1EC6318200C2C215 /* Products */,
+				997AD0BB1EC63CA800C2C215 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +72,10 @@
 				997AD0A21EC6318200C2C215 /* AppDelegate.m */,
 				997AD0A41EC6318200C2C215 /* ViewController.h */,
 				997AD0A51EC6318200C2C215 /* ViewController.m */,
+				997AD0B51EC632FA00C2C215 /* Student.h */,
+				997AD0B61EC632FA00C2C215 /* Student.m */,
+				997AD0B81EC6342800C2C215 /* StudentManage.h */,
+				997AD0B91EC6342800C2C215 /* StudentManage.m */,
 				997AD0A71EC6318200C2C215 /* Main.storyboard */,
 				997AD0AA1EC6318200C2C215 /* Assets.xcassets */,
 				997AD0AC1EC6318200C2C215 /* LaunchScreen.storyboard */,
@@ -77,6 +91,14 @@
 				997AD09F1EC6318200C2C215 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		997AD0BB1EC63CA800C2C215 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				997AD0BC1EC63CA800C2C215 /* libsqlite3.0.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,8 +173,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				997AD0A61EC6318200C2C215 /* ViewController.m in Sources */,
+				997AD0BA1EC6342800C2C215 /* StudentManage.m in Sources */,
 				997AD0A31EC6318200C2C215 /* AppDelegate.m in Sources */,
 				997AD0A01EC6318200C2C215 /* main.m in Sources */,
+				997AD0B71EC632FA00C2C215 /* Student.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +333,7 @@
 				997AD0B41EC6318200C2C215 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

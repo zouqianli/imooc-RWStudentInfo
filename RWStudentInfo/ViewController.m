@@ -7,8 +7,16 @@
 //
 
 #import "ViewController.h"
+#import "Student.h"
+#import "StudentManage.h"
 
-@interface ViewController ()
+@interface ViewController () {
+    StudentManage *studentManage;
+}
+@property (weak, nonatomic) IBOutlet UITextField *name;
+@property (weak, nonatomic) IBOutlet UITextField *age;
+@property (weak, nonatomic) IBOutlet UITextField *gender;
+@property (weak, nonatomic) IBOutlet UITextField *score;
 
 @end
 
@@ -16,13 +24,42 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    [StudentManage testStrcat];
+    return;
+    
 }
 
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+/**
+ 写入数据到数据库
+ 
+ @param stu 学生
+ */
+- (IBAction) writeToDB:(Student *) stu {
+    
+    // 获取界面数据
+//    NSString *name = _name.text;
+//    int age = _age.text.intValue;
+//    int gender = _gender.text.intValue;
+//    double score = _gender.text.doubleValue;
+    
+    NSString *name   = _name.text;
+    NSString *age    = _age.text;
+    NSString *gender = _gender.text;
+    NSString *score  = _score.text;
+    // 打开数据库，插入数据
+    if ([StudentManage openDB]) {
+        [StudentManage insertData:name age:age gender:gender score:score];
+//        [StudentManage insertData];
+    }
+}
+- (IBAction)readFromDB:(UIButton *)sender {
+}
+- (IBAction)createDB:(UIButton *)sender {
+    [StudentManage openDB];
+}
+- (IBAction)createTable:(UIButton *)sender {
+    [StudentManage createTable];
 }
 
 
