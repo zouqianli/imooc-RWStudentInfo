@@ -7,12 +7,16 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "Student.h"
 @interface StudentManage : NSObject
 + (BOOL) openDB;
 + (BOOL) createTable;
 + (BOOL) insertData:(NSString *)name age:(NSString *)age gender:(NSString *)gender score:(NSString *)score;
 + (BOOL) insertData;
-
++ (Student *) getOneData:(Student *) stu withName:(NSString *) stuName;
++ (Student *) getOneStuWithName:(NSString *) stuName ;
++ (BOOL) deleteOneData:(NSString *) stuName;
++ (BOOL) deleteAllData;
++ (NSArray *) getAllStuName;
 + (void) testStrcat ;
 @end
