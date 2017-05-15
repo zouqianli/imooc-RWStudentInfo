@@ -16,6 +16,9 @@
 
 @interface ViewController () {
     StudentManage *studentManage;
+    NSMutableString *names;
+    NSMutableArray *studentsName;
+    UILabel *namesLabel;
 }
 @property (weak, nonatomic) IBOutlet UITextField *name;
 @property (weak, nonatomic) IBOutlet UITextField *age;
@@ -23,7 +26,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *score;
 @property (unsafe_unretained, nonatomic) IBOutlet UITextField *selectByName;
 @property (unsafe_unretained, nonatomic) IBOutlet UITextField *deleteByName;
-@property (weak, nonatomic) IBOutlet UILabel *namesLabel;
 @property (weak, nonatomic) IBOutlet UIScrollView *namesScrollView;
 
 @end
@@ -32,33 +34,61 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    studentsName = [NSMutableArray array];
+    names = [[NSMutableString alloc] init];
     [StudentManage testStrcat];
     return;
     
 }
-
-
 /**
  写入数据到数据库
  
  @param stu 学生
  */
 - (IBAction) writeToDB:(Student *) stu {
-    
     // 获取界面数据
-//    NSString *name = _name.text;
-//    int age = _age.text.intValue;
-//    int gender = _gender.text.intValue;
-//    double score = _gender.text.doubleValue;
-    
     NSString *name   = _name.text;
     NSString *age    = _age.text;
     NSString *gender = _gender.text;
     NSString *score  = _score.text;
     // 打开数据库，插入数据
     if ([StudentManage openDB]) {
-        [StudentManage insertData:name age:age gender:gender score:score];
-//        [StudentManage insertData];
+        [namesLabel removeFromSuperview];
+        NSRange range = NSMakeRange(0, names.length);
+        [names replaceCharactersInRange:range withString:@""]; // 清空names
+        stu = [StudentManage insertData:name age:age gender:gender score:score];
+        if (stu == nil) {
+            NSLog(@"stu is nil.");
+            UIAlertController *tip = [UIAlertController alertControllerWithTitle:@"注意" message:@"stu is nil" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                NSLog(@"点击了取消按钮");
+            }];
+            [tip addAction:cancel];
+            [self presentViewController:tip animated:YES completion:nil];
+            return;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [studentsName addObject:stu.name]; // 添加数据
+            for (NSString *name in studentsName) {
+                NSLog(@"%@",name);
+                [names appendString:@"学生姓名:"];
+                [names appendString:name];
+                [names appendString:@"\n"];
+            }
+            UIFont *font = [UIFont systemFontOfSize:10];
+            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName, nil];
+            CGSize namesWH = [names sizeWithAttributes:dict];
+            namesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, namesWH.height*1.7)];
+            _namesScrollView.contentSize = CGSizeMake(300, namesWH.height*1.7+20);
+            _namesScrollView.showsVerticalScrollIndicator = YES;
+            _namesScrollView.backgroundColor = [UIColor whiteColor];
+            
+            namesLabel.text = names;
+            namesLabel.numberOfLines = 0;
+            namesLabel.backgroundColor = [UIColor greenColor];
+            [_namesScrollView addSubview:namesLabel];
+
+        });
     }
 }
 - (IBAction)readFromDB:(UIButton *)sender {
@@ -79,36 +109,68 @@
     [StudentManage createTable];
 }
 - (IBAction)deleteOneData:(UIButton *)sender {
+    [namesLabel removeFromSuperview];
     [StudentManage deleteOneData:_deleteByName.text];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [studentsName removeObject:_deleteByName.text];
+        for (NSString *name in studentsName) {
+            [names appendString:@"学生姓名:"];
+            [names appendString:name];
+            [names appendString:@"\n"];
+        }
+        namesLabel.text = names;
+        [_namesScrollView addSubview:namesLabel];
+    });
 }
 - (IBAction)deleteAllData:(id)sender {
-    [StudentManage deleteAllData];
+    NSRange range = NSMakeRange(0, names.length);
+    [names replaceCharactersInRange:range withString:@""]; // 清空names
+    namesLabel.text = names;
+    [studentsName removeAllObjects]; // 清空数据
+    [StudentManage deleteAllData]; // 清空数据库
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [namesLabel removeFromSuperview]; // 清除控件
+    });
 }
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [self.view endEditing:YES];
 }
 - (IBAction)getAllStudentsName:(UIButton *)sender {
-    NSArray *studentsName = [NSArray array];
+    NSRange range = NSMakeRange(0, names.length);
+    [names replaceCharactersInRange:range withString:@""]; // 清空names
+    [namesLabel removeFromSuperview];
     studentsName = [StudentManage getAllStuName];
-    NSMutableString *names = [[NSMutableString alloc] init];
+    if (studentsName.count <= 0) {
+        NSLog(@"请先写入数据");
+        UIAlertController *tip = [UIAlertController alertControllerWithTitle:@"注意" message:@"请先在数据库中写入数据" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            NSLog(@"点击了取消按钮");
+        }];
+        [tip addAction:cancel];
+        [self presentViewController:tip animated:YES completion:nil];
+        return;
+    }
+    int i=0;
     for (NSString *name in studentsName) {
-        [names appendString:@"学生姓名:"];
+        NSString *str = [NSString stringWithFormat:@"学生姓名%d:",i++];
+        [names appendString:str];
         [names appendString:name];
-        [names appendString:@" \n"];
-        NSLog(@"stu name:%@",name);
+        [names appendString:@"\n"];
     }
     NSLog(@"stu names:%@",names);
-//    _namesLabel.text = names;
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, 30*studentsName.count)];
-    _namesScrollView.contentSize = CGSizeMake(300, 30*studentsName.count);
+    UIFont *font = [UIFont systemFontOfSize:10];
+    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName, nil];
+    CGSize namesWH = [names sizeWithAttributes:dict];
+    namesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 300, namesWH.height*1.7)];
+    _namesScrollView.contentSize = CGSizeMake(300, namesWH.height*1.7+20);
     _namesScrollView.showsVerticalScrollIndicator = YES;
     _namesScrollView.backgroundColor = [UIColor whiteColor];
     
-    label.text = names;
-    label.numberOfLines = 0;
-    label.backgroundColor = [UIColor greenColor];
-    [_namesScrollView addSubview:label];
+    namesLabel.text = names;
+    namesLabel.numberOfLines = 0;
+    namesLabel.backgroundColor = [UIColor greenColor];
+    [_namesScrollView addSubview:namesLabel];
     
 }
 

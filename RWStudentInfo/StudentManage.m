@@ -75,11 +75,13 @@ NSString *dbFilePath;
  
  @return TRUE 成功 FALSE 失败
  */
-+ (BOOL) insertData:(NSString *)name age:(NSString *)age gender:(NSString *)gender score:(NSString *)score {
++ (Student *) insertData:(NSString *)name age:(NSString *)age gender:(NSString *)gender score:(NSString *)score {
     if ([self openDB]) { // 打开数据库成功
         // 输入过滤
         name = [name stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
+        if (name.length <= 0) {
+            return nil;// 没有数据
+        }
         const char *stuName   = [name UTF8String];
         const char *stuAge    = [age UTF8String];
         const char *stuGender = [gender UTF8String];
@@ -110,15 +112,20 @@ NSString *dbFilePath;
             double doubleScore = [score doubleValue];
             NSLog(@"学生姓名 %@，年龄 %@，性别 %@，成绩%.2f",name,age,gender,doubleScore);
             sqlite3_close(students);
-            return TRUE;
+            Student *stu = [[Student alloc] init];
+            stu.name = name;
+            stu.age = age.intValue;
+            stu.gender = gender.intValue;
+            stu.score = score.doubleValue;
+            return stu;
         }else {
             NSLog(@"插入数据失败");
             fprintf(stderr, "SQL error: %s\n", err);
             sqlite3_close(students);
-            return FALSE;
+            return nil;
         }
     }else {
-        return FALSE;
+        return false;
     }
 }
 /**
@@ -198,6 +205,10 @@ NSString *dbFilePath;
         sqlite3_stmt *statement;
         // 输入过滤
         stuName = [stuName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if (stuName.length <= 0) {
+            sqlite3_close(students);
+            return nil;// 没有数据
+        }
         // 查询数据
 //        snprintf(sql_stmt, sizeof(sql_stmt)/sizeof(char), "SELECT name,age,gender,score FROM students WHERE name = \"nan\";"); // 固定stuName
         
@@ -242,7 +253,7 @@ NSString *dbFilePath;
         return nil;
     }
 }
-+ (NSArray *) getAllStuName {
++ (NSMutableArray *) getAllStuName {
     if ([self openDB]) {
         char sql_stmt[1024];
         sqlite3_stmt *statement;
@@ -273,7 +284,10 @@ NSString *dbFilePath;
     if ([self openDB]) {
         // 输入过滤
         stuName = [stuName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        
+        if (stuName.length <= 0) {
+            sqlite3_close(students);
+            return nil;// 没有数据
+        }
         char head[100] = "DELETE FROM students WHERE name = \"";
         char tail[10] = "\";";
         char sql[1024];

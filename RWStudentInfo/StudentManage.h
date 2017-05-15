@@ -11,12 +11,12 @@
 @interface StudentManage : NSObject
 + (BOOL) openDB;
 + (BOOL) createTable;
-+ (BOOL) insertData:(NSString *)name age:(NSString *)age gender:(NSString *)gender score:(NSString *)score;
++ (Student *) insertData:(NSString *)name age:(NSString *)age gender:(NSString *)gender score:(NSString *)score;
 + (BOOL) insertData;
 + (Student *) getOneData:(Student *) stu withName:(NSString *) stuName;
 + (Student *) getOneStuWithName:(NSString *) stuName ;
 + (BOOL) deleteOneData:(NSString *) stuName;
 + (BOOL) deleteAllData;
-+ (NSArray *) getAllStuName;
++ (NSMutableArray *) getAllStuName;
 + (void) testStrcat ;
 @end
